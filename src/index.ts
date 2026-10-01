@@ -54,6 +54,40 @@ const createBook = async (
     console.log(newBook)
 }
 
+const updateBook = async (
+  id: string,
+  title: string,
+  author: string,
+  price: number,
+  stock: number
+) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log("ID inválido")
+    return
+  }
+
+  const updatedBook = await Book.findByIdAndUpdate(
+    id,
+    {
+      title,
+      author,
+      price,
+      stock
+    },
+    {
+      new: true
+    }
+  )
+
+  if (!updatedBook) {
+    console.log("No se encontró el libro")
+    return
+  }
+
+  console.log("Libro actualizado:")
+  console.log(updatedBook)
+}
+
 const getBooks = async () => {
     const books = await Book.find()
 
@@ -89,11 +123,27 @@ const main = async () => {
         )
 
         break
+      case "update":
+
+         if (!args[1] || !args[2] || !args[3] || !args[4] || !args[5]) {
+          console.log("Faltan datos para actualizar el libro")
+         break
+        }
+
+        await updateBook(
+          args[1],
+          args[2],
+          args[3],
+          Number(args[4]),
+          Number(args[5])
+        )
+
+        break
 
       default:
         console.log("Comando no válido")
-        console.log("Usá: create")
     }
+    
   } finally {
     await mongoose.disconnect()
   }
