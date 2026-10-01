@@ -140,6 +140,12 @@ const main = async () => {
 
         break
 
+      case "read":
+
+          await getBooks()
+
+          break
+
       case "update":
 
         if (!args[1] || !args[2] || !args[3] || !args[4] || !args[5]) {
