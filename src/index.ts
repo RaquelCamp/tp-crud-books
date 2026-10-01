@@ -88,6 +88,22 @@ const updateBook = async (
   console.log(updatedBook)
 }
 
+const deleteBook = async (id: string) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    console.log("ID inválido")
+    return
+  }
+
+  const deletedBook = await Book.findByIdAndDelete(id)
+
+  if (!deletedBook) {
+    console.log("No se encontró el libro")
+    return
+  }
+
+  console.log("Libro eliminado correctamente")
+}
+
 const getBooks = async () => {
     const books = await Book.find()
 
@@ -123,9 +139,10 @@ const main = async () => {
         )
 
         break
+
       case "update":
 
-         if (!args[1] || !args[2] || !args[3] || !args[4] || !args[5]) {
+        if (!args[1] || !args[2] || !args[3] || !args[4] || !args[5]) {
           console.log("Faltan datos para actualizar el libro")
          break
         }
@@ -137,6 +154,16 @@ const main = async () => {
           Number(args[4]),
           Number(args[5])
         )
+
+        break
+      case "delete":
+
+        if (!args[1]) {
+          console.log("Falta el ID del libro")
+          break
+        }
+
+        await deleteBook(args[1])
 
         break
 
